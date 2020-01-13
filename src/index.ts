@@ -3,48 +3,49 @@
 // tslint:disable-next-line:no-var-requires
 require("dotenv").config();
 
+import chokidar from "chokidar";
 import fs from "fs";
-const fsPromises = fs.promises;
+import path from "path";
 
-// import chokidar from "chokidar";
-// import crypto from "crypto";
-
-import { getFiles, getProjects } from "client";
+import { getFiles, getProjects, updateFile } from "client";
 import { IQuantConnectProject } from "types";
 import { asyncForEach } from "utils";
 
-const { QUANTCONNECT_USER_ID, QUANTCONNECT_TOKEN, QUANTCONNECT_PROJECT_ID } = process.env;
+const fsPromises = fs.promises;
+let projects: IQuantConnectProject[] = [];
 
 (async () => {
-  console.log("STARTED", QUANTCONNECT_USER_ID, QUANTCONNECT_TOKEN, QUANTCONNECT_PROJECT_ID);
-
   try {
-    const projects: IQuantConnectProject[] = await getProjects();
+    projects = await getProjects();
 
     await asyncForEach(projects, async project => {
       const files = await getFiles(project.projectId);
-      console.log(project.name);
-      console.log(files);
+
+      process.stdout.write(`Downloading ${project.name}... `);
 
       await fsPromises.mkdir(project.name, { recursive: true });
 
       await asyncForEach(files, async file => {
         await fsPromises.writeFile(`${project.name}/${file.name}`, file.content);
       });
+
+      console.log("✔️");
     });
   } catch (e) {
-    console.log("ERROR", e);
+    console.log("❌", e);
   }
 
-  // chokidar.watch("./**/*.cs").on("change", (event, path) => {
-  //   console.log(event, path);
+  chokidar.watch("./**/*.cs", { ignored: /(^|[\/\\])\../ }).on("change", async filePath => {
+    const contents = await fsPromises.readFile(filePath, { encoding: "utf-8" });
+    const project = projects.find(p => filePath.startsWith(p.name));
+    const filename = path.basename(filePath);
 
-  //   const ts = Math.floor(Number(new Date()) / 1000);
-  //   const hash = crypto
-  //     .createHash("sha256")
-  //     .update(`${QUANTCONNECT_TOKEN}:${ts}`)
-  //     .digest("hex");
-
-  //   console.log(ts, hash);
-  // });
+    try {
+      process.stdout.write(`Uploading ${project.name}/${filename}... `);
+      await updateFile(project.projectId, filename, contents);
+      console.log("✔️");
+    } catch (e) {
+      console.log("❌", e);
+    }
+  });
 })();

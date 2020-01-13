@@ -12,7 +12,7 @@ const client = axios.create({
   baseURL: QUANTCONNECT_API_BASE_URL,
 });
 
-const request = async (endpoint: string, options = {}): Promise<AxiosResponse> => {
+const get = async (endpoint: string, options = {}): Promise<AxiosResponse> => {
   const timestamp = getTimestamp();
   const hash = getTokenHash(QUANTCONNECT_TOKEN, timestamp);
 
@@ -32,16 +32,42 @@ const request = async (endpoint: string, options = {}): Promise<AxiosResponse> =
   return response;
 };
 
+const post = async (endpoint: string, data = {}, options = {}): Promise<AxiosResponse> => {
+  const timestamp = getTimestamp();
+  const hash = getTokenHash(QUANTCONNECT_TOKEN, timestamp);
+
+  const response = await client.post(endpoint, data, {
+    ...{
+      auth: {
+        username: QUANTCONNECT_USER_ID,
+        password: hash,
+      },
+      headers: {
+        Timestamp: timestamp,
+      },
+    },
+    ...options,
+  });
+
+  return response;
+};
+
 const getProjects = async (): Promise<IQuantConnectProject[]> => {
-  const response = await request("/projects/read");
+  const response = await get("/projects/read");
 
   return response.data.projects;
 };
 
 const getFiles = async (projectId: number): Promise<IQuantConnectFile[]> => {
-  const response = await request(`/files/read?projectId=${projectId}`);
+  const response = await get(`/files/read?projectId=${projectId}`);
 
   return response.data.files;
+};
+
+const updateFile = async (projectId: number, filename: string, content: string) => {
+  const response = await post("/files/update", { projectId, name: filename, content });
+
+  return response.data;
 };
 
 const getTimestamp = (): number => Math.floor(Number(new Date()) / 1000);
@@ -52,4 +78,4 @@ const getTokenHash = (token: string, timestamp: number) =>
     .digest("hex");
 
 export default client;
-export { getFiles, getProjects };
+export { getFiles, getProjects, updateFile };
