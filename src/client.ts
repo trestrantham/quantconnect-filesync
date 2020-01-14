@@ -5,21 +5,20 @@ import crypto from "crypto";
 
 import { IQuantConnectFile, IQuantConnectProject } from "types";
 
-const { QUANTCONNECT_USER_ID, QUANTCONNECT_TOKEN } = process.env;
 const QUANTCONNECT_API_BASE_URL = "https://www.quantconnect.com/api/v2";
 
 const client = axios.create({
   baseURL: QUANTCONNECT_API_BASE_URL,
 });
 
-const get = async (endpoint: string, options = {}): Promise<AxiosResponse> => {
+const get = async (userId: string, token: string, endpoint: string, options = {}): Promise<AxiosResponse> => {
   const timestamp = getTimestamp();
-  const hash = getTokenHash(QUANTCONNECT_TOKEN, timestamp);
+  const hash = getTokenHash(token, timestamp);
 
   const response = await client.get(endpoint, {
     ...{
       auth: {
-        username: QUANTCONNECT_USER_ID,
+        username: userId,
         password: hash,
       },
       headers: {
@@ -32,14 +31,20 @@ const get = async (endpoint: string, options = {}): Promise<AxiosResponse> => {
   return response;
 };
 
-const post = async (endpoint: string, data = {}, options = {}): Promise<AxiosResponse> => {
+const post = async (
+  userId: string,
+  token: string,
+  endpoint: string,
+  data = {},
+  options = {},
+): Promise<AxiosResponse> => {
   const timestamp = getTimestamp();
-  const hash = getTokenHash(QUANTCONNECT_TOKEN, timestamp);
+  const hash = getTokenHash(token, timestamp);
 
   const response = await client.post(endpoint, data, {
     ...{
       auth: {
-        username: QUANTCONNECT_USER_ID,
+        username: userId,
         password: hash,
       },
       headers: {
@@ -52,20 +57,26 @@ const post = async (endpoint: string, data = {}, options = {}): Promise<AxiosRes
   return response;
 };
 
-const getProjects = async (): Promise<IQuantConnectProject[]> => {
-  const response = await get("/projects/read");
+const getProjects = async (userId: string, token: string): Promise<IQuantConnectProject[]> => {
+  const response = await get(userId, token, "/projects/read");
 
   return response.data.projects;
 };
 
-const getFiles = async (projectId: number): Promise<IQuantConnectFile[]> => {
-  const response = await get(`/files/read?projectId=${projectId}`);
+const getProject = async (userId: string, token: string, projectId: string): Promise<IQuantConnectProject> => {
+  const response = await get(userId, token, `/projects/read?projectId=${projectId}`);
+
+  return response.data.projects.length === 1 ? response.data.projects[0] : null;
+};
+
+const getFiles = async (userId: string, token: string, projectId: number): Promise<IQuantConnectFile[]> => {
+  const response = await get(userId, token, `/files/read?projectId=${projectId}`);
 
   return response.data.files;
 };
 
-const updateFile = async (projectId: number, filename: string, content: string) => {
-  const response = await post("/files/update", { projectId, name: filename, content });
+const updateFile = async (userId: string, token: string, projectId: number, filename: string, content: string) => {
+  const response = await post(userId, token, "/files/update", { projectId, name: filename, content });
 
   return response.data;
 };
@@ -78,4 +89,4 @@ const getTokenHash = (token: string, timestamp: number) =>
     .digest("hex");
 
 export default client;
-export { getFiles, getProjects, updateFile };
+export { getFiles, getProject, getProjects, updateFile };
