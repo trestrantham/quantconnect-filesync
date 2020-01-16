@@ -2,14 +2,15 @@
 
 import chalk from "chalk";
 import fs from "fs";
+import path from "path";
 
-import { getFiles, getProject } from "../client";
-import { IQuantConnectProject } from "../types";
-import { asyncForEach } from "../utils";
+import { getFiles, getProject } from "./client";
+import { IQuantConnectProject } from "./types";
+import { asyncForEach } from "./utils";
 
 const fsPromises = fs.promises;
 
-const run = async (userId: string, token: string, directory: string, projectId: string) => {
+const run = async (userId: string, token: string, projectId: string) => {
   console.log(chalk.cyan(`Syncing files for project ${projectId} from QuantConnect…\n`));
 
   try {
@@ -18,10 +19,11 @@ const run = async (userId: string, token: string, directory: string, projectId: 
 
     console.log(chalk.bold(`${project.name.split("/").join(chalk.cyan(" / "))}:`));
 
-    await fsPromises.mkdir(`${directory}/${project.name}`, { recursive: true });
-
     await asyncForEach(files, async file => {
-      await fsPromises.writeFile(`${directory}/${file.name}`, file.content);
+      const dirname = path.dirname(file.name);
+
+      await fsPromises.mkdir(dirname, { recursive: true });
+      await fsPromises.writeFile(file.name, file.content);
       console.log(" -", file.name, chalk.green("✔️"));
     });
   } catch (e) {

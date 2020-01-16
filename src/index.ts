@@ -5,20 +5,16 @@
 require("dotenv").config();
 
 import chalk from "chalk";
-// import clear from "clear";
 import program from "commander";
 
-import downloadProject from "./download/project";
-import downloadProjects from "./download/projects";
+import download from "./download";
 import listProject from "./list/project";
 import listProjects from "./list/projects";
-import watchProject from "./watch/project";
-// import watchProjects from "./watch/projects";
+import watch from "./watch";
 
 const { QUANTCONNECT_PROJECT_ID, QUANTCONNECT_TOKEN, QUANTCONNECT_USER_ID } = process.env;
 const CONFIG = require("../package.json");
 
-// clear();
 console.log(chalk.green("QuantConnect FileSync"), `v${CONFIG.version}`);
 console.log();
 
@@ -26,7 +22,7 @@ program.version(CONFIG.version, "-v, --version");
 
 program
   .command("projects")
-  .description("List all projects from QuantConnect")
+  .description("List projects from QuantConnect")
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
   .option("-p, --project <project>", "The QuantConnect project ID", QUANTCONNECT_PROJECT_ID)
@@ -46,18 +42,13 @@ program
 
 program
   .command("download")
-  .description("Downloads all files from QuantConnect to the local filesystem")
+  .description("Downloads all files from QuantConnect to the current directory")
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
-  .option("-p, --project [project]", "The QuantConnect project ID to download files for", QUANTCONNECT_PROJECT_ID)
-  .option("-d, --directory [directory]", "The directory to download files to (defaults to current directory)", ".")
+  .option("-p, --project <project>", "The QuantConnect project ID to download files for", QUANTCONNECT_PROJECT_ID)
   .action(async cmd => {
-    if (cmd.user && cmd.token) {
-      if (cmd.project && cmd.project.length) {
-        await downloadProject(cmd.user, cmd.token, cmd.directory, cmd.project);
-      } else {
-        await downloadProjects(cmd.user, cmd.token, cmd.directory);
-      }
+    if (cmd.user && cmd.token && cmd.project && cmd.project.length) {
+      await download(cmd.user, cmd.token, cmd.project);
     } else {
       cmd.outputHelp();
     }
@@ -67,20 +58,15 @@ program
 
 program
   .command("watch")
-  .description("Watch for local file updates and sync changes to QuantConnect")
+  .description("Watch for file updates in the current directory and sync changes to QuantConnect")
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
-  .option("-p, --project [project]", "The QuantConnect project ID to upload files to", QUANTCONNECT_PROJECT_ID)
+  .option("-p, --project <project>", "The QuantConnect project ID to upload files to", QUANTCONNECT_PROJECT_ID)
   .action(async cmd => {
-    if (cmd.user && cmd.token) {
-      if (cmd.project && cmd.project.length) {
-        await downloadProject(cmd.user, cmd.token, ".", cmd.project);
-        console.log();
-        await watchProject(cmd.user, cmd.token, cmd.project);
-      } else {
-        // await watchProjects(cmd.user, cmd.token);
-        console.log("watch projects");
-      }
+    if (cmd.user && cmd.token && cmd.project && cmd.project.length) {
+      await download(cmd.user, cmd.token, cmd.project);
+      console.log();
+      await watch(cmd.user, cmd.token, cmd.project);
     } else {
       cmd.outputHelp();
     }

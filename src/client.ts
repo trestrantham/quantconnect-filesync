@@ -75,6 +75,18 @@ const getFiles = async (userId: string, token: string, projectId: number): Promi
   return response.data.files;
 };
 
+const addFile = async (userId: string, token: string, projectId: number, filename: string, content: string) => {
+  const response = await post(userId, token, "/files/create", { projectId, name: filename, content });
+
+  return response.data;
+};
+
+const deleteFile = async (userId: string, token: string, projectId: number, filename: string) => {
+  const response = await post(userId, token, "/files/delete", { projectId, name: filename });
+
+  return response.data;
+};
+
 const updateFile = async (userId: string, token: string, projectId: number, filename: string, content: string) => {
   const response = await post(userId, token, "/files/update", { projectId, name: filename, content });
 
@@ -89,4 +101,4 @@ const getTokenHash = (token: string, timestamp: number) =>
     .digest("hex");
 
 export default client;
-export { getFiles, getProject, getProjects, updateFile };
+export { addFile, deleteFile, getFiles, getProject, getProjects, updateFile };
