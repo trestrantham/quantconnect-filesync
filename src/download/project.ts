@@ -3,9 +3,9 @@
 import chalk from "chalk";
 import fs from "fs";
 
-import { getFiles, getProject } from "./client";
-import { IQuantConnectProject } from "./types";
-import { asyncForEach } from "./utils";
+import { getFiles, getProject } from "../client";
+import { IQuantConnectProject } from "../types";
+import { asyncForEach } from "../utils";
 
 const fsPromises = fs.promises;
 

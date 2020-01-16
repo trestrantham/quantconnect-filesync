@@ -2,12 +2,12 @@
 
 import chalk from "chalk";
 
-import { getProjects } from "./client";
-import { IQuantConnectProject } from "./types";
-import { asyncForEach } from "./utils";
+import { getProjects } from "../client";
+import { IQuantConnectProject } from "../types";
+import { asyncForEach } from "../utils";
 
 const run = async (userId: string, token: string) => {
-  console.log(chalk.cyan("Fetching all projects from QuantConnect…\n"));
+  console.log(chalk.cyan("Listing all projects from QuantConnect…\n"));
 
   try {
     const projects: IQuantConnectProject[] = await getProjects(userId, token);

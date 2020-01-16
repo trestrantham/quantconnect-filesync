@@ -8,10 +8,12 @@ import chalk from "chalk";
 // import clear from "clear";
 import program from "commander";
 
-import downloadAll from "./download-all";
-import downloadProject from "./download-project";
-import project from "./project";
-import projects from "./projects";
+import downloadProject from "./download/project";
+import downloadProjects from "./download/projects";
+import listProject from "./list/project";
+import listProjects from "./list/projects";
+import watchProject from "./watch/project";
+// import watchProjects from "./watch/projects";
 
 const { QUANTCONNECT_PROJECT_ID, QUANTCONNECT_TOKEN, QUANTCONNECT_USER_ID } = process.env;
 const CONFIG = require("../package.json");
@@ -31,9 +33,9 @@ program
   .action(async cmd => {
     if (cmd.user && cmd.token) {
       if (cmd.project && cmd.project.length) {
-        await project(cmd.user, cmd.token, cmd.project);
+        await listProject(cmd.user, cmd.token, cmd.project);
       } else {
-        await projects(cmd.user, cmd.token);
+        await listProjects(cmd.user, cmd.token);
       }
     } else {
       cmd.outputHelp();
@@ -54,13 +56,34 @@ program
       if (cmd.project && cmd.project.length) {
         await downloadProject(cmd.user, cmd.token, cmd.directory, cmd.project);
       } else {
-        await downloadAll(cmd.user, cmd.token, cmd.directory);
+        await downloadProjects(cmd.user, cmd.token, cmd.directory);
       }
     } else {
       cmd.outputHelp();
     }
 
     console.log();
+  });
+
+program
+  .command("watch")
+  .description("Watch for local file updates and sync changes to QuantConnect")
+  .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
+  .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
+  .option("-p, --project [project]", "The QuantConnect project ID to upload files to", QUANTCONNECT_PROJECT_ID)
+  .action(async cmd => {
+    if (cmd.user && cmd.token) {
+      if (cmd.project && cmd.project.length) {
+        await downloadProject(cmd.user, cmd.token, ".", cmd.project);
+        console.log();
+        await watchProject(cmd.user, cmd.token, cmd.project);
+      } else {
+        // await watchProjects(cmd.user, cmd.token);
+        console.log("watch projects");
+      }
+    } else {
+      cmd.outputHelp();
+    }
   });
 
 program.parse(process.argv.filter(a => a !== "--files"));
