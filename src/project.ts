@@ -1,24 +1,30 @@
 // tslint:disable:no-console
-
-// tslint:disable-next-line:no-var-requires
-require("dotenv").config();
+import chalk from "chalk";
 
 import { getProject } from "./client";
 import { IQuantConnectProject } from "./types";
 
 const run = async (userId: string, token: string, projectId: string) => {
+  console.log(chalk.cyan(`Fetching project ${projectId} from QuantConnect…\n`));
+
   try {
     const project: IQuantConnectProject = await getProject(userId, token, projectId);
 
-    console.log();
-    console.log("Name:", project.name);
-    console.log("Project ID:", project.projectId);
-    console.log("Created:", project.created);
-    console.log("Last modified:", project.modified);
-    console.log("Owner ID:", project.ownerId);
-    console.log();
+    if (project) {
+      console.log(`${chalk.magenta("Name")}:`, project.name.split("/").join(chalk.cyan(" / ")));
+      console.log(`${chalk.magenta("Project ID")}:`, project.projectId);
+      console.log(`${chalk.magenta("Created")}:`, project.created);
+      console.log(`${chalk.magenta("Last modified")}:`, project.modified);
+      console.log(`${chalk.magenta("Owner ID")}:`, project.ownerId);
+    } else {
+      console.log(chalk.gray("No project found"));
+    }
   } catch (e) {
-    console.log("ERROR", e);
+    console.log(chalk.red("Could not fetch projects!"));
+
+    if (process.env.DEBUG) {
+      console.log(e);
+    }
   }
 };
 

@@ -1,44 +1,45 @@
+#!/usr/bin/env node
+
 // tslint:disable: no-console
-// tslint:disable-next-line: no-var-requires
+// tslint:disable: no-var-requires
 require("dotenv").config();
 
+import chalk from "chalk";
+// import clear from "clear";
 import program from "commander";
 
-import download from "./download";
+import downloadAll from "./download-all";
+import downloadProject from "./download-project";
 import project from "./project";
 import projects from "./projects";
 
 const { QUANTCONNECT_PROJECT_ID, QUANTCONNECT_TOKEN, QUANTCONNECT_USER_ID } = process.env;
+const CONFIG = require("../package.json");
 
-program.version("0.0.1", "-v, --version");
+// clear();
+console.log(chalk.green("QuantConnect FileSync"), `v${CONFIG.version}`);
+console.log();
+
+program.version(CONFIG.version, "-v, --version");
 
 program
   .command("projects")
-  .description("Lists all projects from QuantConnect")
-  .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
-  .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
-  .action(cmd => {
-    if (cmd.user && cmd.token) {
-      projects(cmd.user, cmd.token);
-    } else {
-      cmd.outputHelp();
-      console.log();
-    }
-  });
-
-program
-  .command("project")
-  .description("Lists project details from QuantConnect")
+  .description("List all projects from QuantConnect")
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
   .option("-p, --project <project>", "The QuantConnect project ID", QUANTCONNECT_PROJECT_ID)
-  .action(cmd => {
-    if (cmd.user && cmd.token && cmd.project) {
-      project(cmd.user, cmd.token, cmd.project);
+  .action(async cmd => {
+    if (cmd.user && cmd.token) {
+      if (cmd.project && cmd.project.length) {
+        await project(cmd.user, cmd.token, cmd.project);
+      } else {
+        await projects(cmd.user, cmd.token);
+      }
     } else {
       cmd.outputHelp();
-      console.log();
     }
+
+    console.log();
   });
 
 program
@@ -47,14 +48,19 @@ program
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
   .option("-p, --project [project]", "The QuantConnect project ID to download files for", QUANTCONNECT_PROJECT_ID)
-  // .option("-w, --watch", "Output SQL of unmapped markets")
-  .action(cmd => {
+  .option("-d, --directory [directory]", "The directory to download files to (defaults to current directory)", ".")
+  .action(async cmd => {
     if (cmd.user && cmd.token) {
-      download(cmd.user, cmd.token, cmd.project);
+      if (cmd.project && cmd.project.length) {
+        await downloadProject(cmd.user, cmd.token, cmd.directory, cmd.project);
+      } else {
+        await downloadAll(cmd.user, cmd.token, cmd.directory);
+      }
     } else {
       cmd.outputHelp();
-      console.log();
     }
+
+    console.log();
   });
 
 program.parse(process.argv.filter(a => a !== "--files"));

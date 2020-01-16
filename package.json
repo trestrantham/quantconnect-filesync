@@ -1,7 +1,7 @@
 {
   "name": "quantconnect-filesync",
-  "version": "1.0.0",
-  "description": "Daedalus",
+  "version": "0.0.1",
+  "description": "QuantConnect file sync utility",
   "main": "src/index.js",
   "bin": {
     "qc": "src/index.js",
@@ -9,8 +9,7 @@
   },
   "repository": "git@github.com:trestrantham/quantconnect-filesync.git",
   "author": "tres@trestrantham.com",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "preferGlobal": true,
   "engines": {
     "node": "12.x"
@@ -42,6 +41,7 @@
     "@types/express": "^4.16.0",
     "@types/node": "12.x",
     "axios": "^0.19.0",
+    "chalk": "^3.0.0",
     "commander": "^4.1.0",
     "dotenv": "^8.0.0",
     "ts-node": "^8.5.2",
