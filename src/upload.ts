@@ -3,9 +3,9 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 
-import { getProject, updateFile } from "client";
-import { IQuantConnectProject } from "types";
-import { asyncForEach } from "utils";
+import { getProject, updateFile } from "./client";
+import { IQuantConnectProject } from "./types";
+import { asyncForEach } from "./utils";
 
 const fsPromises = fs.promises;
 
@@ -33,13 +33,11 @@ const run = async (userId: string, token: string, projectId: string) => {
     if (project) {
       const files = findInDir(".", /^[^.].*$/);
 
-      console.log(files);
+      console.log(chalk.bold(`${project.name.split("/").join(chalk.cyan(" / "))}:`));
 
       asyncForEach(files, async filePath => {
         const contents = await fsPromises.readFile(filePath, { encoding: "utf-8" });
-        process.stdout.write(
-          `${chalk.cyan("SYNC")} ${[...project.name.split("/"), ...filePath.split("/")].join(chalk.cyan(" / "))} `,
-        );
+        process.stdout.write(` - ${filePath.split("/").join(chalk.cyan(" / "))} `);
         try {
           await updateFile(userId, token, project.projectId, filePath, contents);
           console.log(chalk.green("✔️"));

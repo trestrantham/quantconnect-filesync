@@ -24,7 +24,8 @@ const run = async (userId: string, token: string, projectId: string) => {
 
       await fsPromises.mkdir(dirname, { recursive: true });
       await fsPromises.writeFile(file.name, file.content);
-      console.log(" -", file.name, chalk.green("✔️"));
+
+      console.log(` - ${file.name.split("/").join(chalk.cyan(" / "))}`, chalk.green("✔️"));
     });
   } catch (e) {
     console.log(chalk.red("Could not download project files!"));
