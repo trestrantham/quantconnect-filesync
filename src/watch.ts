@@ -101,7 +101,7 @@ const run = async (userId: string, token: string, projectId: string) => {
       console.log(chalk.yellow("No project found"));
     }
   } catch (e) {
-    console.log(chalk.red("Could not fetch projects!"));
+    console.log(chalk.red("There was a problem watching project files"));
 
     if (process.env.DEBUG) {
       console.log(e);
