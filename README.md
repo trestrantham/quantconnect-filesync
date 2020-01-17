@@ -66,7 +66,7 @@ Listing all projects from QuantConnect…
 ### Project Details
 
 ```bash
-$ quantconnect-filesync project -u 12345 -t ABCDEF -p 9012345
+$ quantconnect-filesync projects -u 12345 -t ABCDEF -p 9012345
 QuantConnect FileSync v0.0.1
 
 Listing project 9012345 from QuantConnect…
