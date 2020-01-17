@@ -1,6 +1,6 @@
 # QuantConnect File Sync
 
-## WARNING: This is very early beta software and makes no guarantees about any usage details before. Make sure your files are backed up before running any commands below as this will overwrite both local files and QuantConnect project files.
+## WARNING: This is very early beta software and makes no guarantees about any usage details below. Make sure your files are backed up before running quantconnect-sync as it will overwrite both local files and QuantConnect project files. Use at your own risk.
 
 ## Installation
 
