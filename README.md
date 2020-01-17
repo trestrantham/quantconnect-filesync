@@ -61,9 +61,9 @@ QuantConnect FileSync v0.0.1
 Downloading files for project 9012345 from QuantConnect…
 
 Strategies / Profit Strategy:
- - main.cs ✔️
- - MyIndicator.cs ✔️
- - MyAlpha.cs ✔️
+ - main.cs ✔
+ - MyIndicator.cs ✔
+ - MyAlpha.cs ✔
 ```
 
 ### Upload
@@ -75,9 +75,9 @@ QuantConnect FileSync v0.0.1
 Uploading files for project 9012345 to QuantConnect…
 
 Strategies / Profit Strategy:
- - main.cs ✔️
- - MyIndicator.cs ✔️
- - MyAlpha.cs ✔️
+ - main.cs ✔
+ - MyIndicator.cs ✔
+ - MyAlpha.cs ✔
 ```
 
 ### Watch
@@ -89,16 +89,16 @@ QuantConnect FileSync v0.0.1
 Downloading files for project 9012345 from QuantConnect…
 
 Strategies / Profit Strategy:
- - main.cs ✔️
- - MyIndicator.cs ✔️
- - MyAlpha.cs ✔️
+ - main.cs ✔
+ - MyIndicator.cs ✔
+ - MyAlpha.cs ✔
 
 Watching for local changes to project 9012345…
 
 ADD Strategies / DevTrader Strategy / strategy.cs ✔
-CHANGE Strategies / DevTrader Strategy / strategy.cs ✔️
-CHANGE Strategies / DevTrader Strategy / MyAlpha.cs ✔️
-CHANGE Strategies / DevTrader Strategy / MyIndicator.cs ✔️
-CHANGE Strategies / DevTrader Strategy / MyIndicator.cs ✔️
-DELETE Strategies / DevTrader Strategy / MyAlpha.cs ✔️
+CHANGE Strategies / DevTrader Strategy / strategy.cs ✔
+CHANGE Strategies / DevTrader Strategy / MyAlpha.cs ✔
+CHANGE Strategies / DevTrader Strategy / MyIndicator.cs ✔
+CHANGE Strategies / DevTrader Strategy / MyIndicator.cs ✔
+DELETE Strategies / DevTrader Strategy / MyAlpha.cs ✔
 ```
