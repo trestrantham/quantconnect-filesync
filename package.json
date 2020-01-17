@@ -4,8 +4,7 @@
   "description": "QuantConnect file sync utility",
   "main": "src/index.js",
   "bin": {
-    "qc": "lib/index.js",
-    "quantconnect": "lib/index.js"
+    "quantconnect-filesync": "./lib/index.js"
   },
   "repository": "git@github.com:trestrantham/quantconnect-filesync.git",
   "author": "tres@trestrantham.com",

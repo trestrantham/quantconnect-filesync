@@ -18,14 +18,14 @@ const CONFIG = require("../package.json");
 console.log(chalk.green("QuantConnect FileSync"), `v${CONFIG.version}`);
 console.log();
 
-program.version(CONFIG.version, "-v, --version");
+program.name("qcfs").version(CONFIG.version, "-v, --version");
 
 program
   .command("projects")
   .description("List projects from QuantConnect")
   .option("-u, --user <user>", "The QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "The QuantConnect API token", QUANTCONNECT_TOKEN)
-  .option("-p, --project <project>", "The QuantConnect project ID", QUANTCONNECT_PROJECT_ID)
+  .option("-p, --project [project]", "The QuantConnect project ID")
   .action(async cmd => {
     if (cmd.user && cmd.token) {
       if (cmd.project && cmd.project.length) {
@@ -36,8 +36,6 @@ program
     } else {
       cmd.outputHelp();
     }
-
-    console.log();
   });
 
 program
@@ -52,8 +50,6 @@ program
     } else {
       cmd.outputHelp();
     }
-
-    console.log();
   });
 
 program
@@ -73,5 +69,10 @@ program
   });
 
 program.parse(process.argv.filter(a => a !== "--files"));
+
+const args = process.argv.slice(2);
+if (!args.length || args[0] === "--files") {
+  program.outputHelp();
+}
 
 export default program;
