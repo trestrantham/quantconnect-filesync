@@ -18,6 +18,23 @@ Commands:
   watch [options]     Watch for file updates in the current directory and sync changes to QuantConnect
 ```
 
+## Configuration
+
+All commands accept a `--user` option to provide the QuantConnect user ID and a `--token` option to provide the
+QuantConnect API token. However, `quantconnect-filesync` will also look in the ENV for `QUANTCONNECT_USER_ID` and
+`QUANTCONNECT_TOKEN` and use these automatically if present. You can set these in your local environment manually or
+optionally create a `.env` file with these values set:
+
+```
+# .env
+QUANTCONNECT_USER_ID=12345
+QUANTCONNECT_TOKEN=ABCDEF
+```
+
+For project-specific commands, `quantconnect-filesync` will additionally accept a `--project` option to provide the
+QuantConnect project ID. This option also has a corresponding `QUANTCONNECT_PROJECT_ID` ENV variable that can be set in
+project-specific `.env` files.
+
 ## Examples
 
 ### Projects
