@@ -41,7 +41,7 @@ program
 
 program
   .command("download")
-  .description("Downloads all files from QuantConnect to the current directory")
+  .description("Download all files from QuantConnect to the current directory")
   .option("-u, --user <user>", "QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "QuantConnect API token", QUANTCONNECT_TOKEN)
   .option("-p, --project <project>", "QuantConnect project ID to download files for", QUANTCONNECT_PROJECT_ID)
@@ -55,7 +55,7 @@ program
 
 program
   .command("upload")
-  .description("Uploads all files from current directory to QuantConnect")
+  .description("Upload all files from current directory to QuantConnect")
   .option("-u, --user <user>", "QuantConnect user ID", QUANTCONNECT_USER_ID)
   .option("-t, --token <token>", "QuantConnect API token", QUANTCONNECT_TOKEN)
   .option("-p, --project <project>", "QuantConnect project ID to upload files for", QUANTCONNECT_PROJECT_ID)
