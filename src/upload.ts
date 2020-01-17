@@ -27,6 +27,8 @@ const findInDir = (dir, filter, fileList = []) => {
 };
 
 const run = async (userId: string, token: string, projectId: string) => {
+  console.log(chalk.cyan(`Uploading files for project ${projectId} to QuantConnect…\n`));
+
   try {
     const project: IQuantConnectProject = await getProject(userId, token, projectId);
 

@@ -11,7 +11,7 @@ import { asyncForEach } from "./utils";
 const fsPromises = fs.promises;
 
 const run = async (userId: string, token: string, projectId: string) => {
-  console.log(chalk.cyan(`Syncing files for project ${projectId} from QuantConnect…\n`));
+  console.log(chalk.cyan(`Downloading files for project ${projectId} from QuantConnect…\n`));
 
   try {
     const project: IQuantConnectProject = await getProject(userId, token, projectId);
