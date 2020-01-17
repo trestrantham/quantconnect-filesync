@@ -1,6 +1,6 @@
 {
   "name": "quantconnect-filesync",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "QuantConnect file sync utility",
   "main": "src/index.js",
   "bin": {
