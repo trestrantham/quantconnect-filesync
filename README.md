@@ -1,8 +1,17 @@
 # QuantConnect File Sync
 
+## Installation
+
+```bash
+$ yarn global add quantconnect-filesync
+(or)
+$ npm install -g quantconnect-filesync
+```
+
 ## Usage
 
 ```
+$ quantconnect-filesync -h
 QuantConnect FileSync v0.0.1
 
 Usage: quantconnect-filesync [options] [command]
