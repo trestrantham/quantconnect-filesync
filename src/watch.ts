@@ -95,7 +95,6 @@ const run = async (userId: string, token: string, projectId: string) => {
             //   );
             //   break;
           }
-          console.log(event, filePath);
         });
     } else {
       console.log(chalk.yellow("No project found"));
